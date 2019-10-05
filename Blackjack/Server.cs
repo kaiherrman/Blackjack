@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,11 +12,11 @@ namespace Blackjack
 {
     class Server
     {
-
         public string Eof = "!<tlbzXnAz5mYvMJoC5uUJ*tlbzXnAz5mYvMJoC5uUJ>!";
         public string Data = null;
         public IPAddress IpAddress { get; set; }
         public int Port { get; set; }
+        public Router Router = new Router();
 
         public Server(IPAddress ip, int port)
         {
@@ -94,10 +95,11 @@ namespace Blackjack
                     string route = (string)jObject.SelectToken("route");
                     JObject data = (JObject)jObject.SelectToken("data");
 
-                    Router.Route(route, data);
+
+                    JObject response = this.Router.Route(route, data);
 
                     // Echo the data back to the client.  
-                    byte[] msg = Encoding.ASCII.GetBytes(Data);
+                    byte[] msg = Encoding.ASCII.GetBytes(response.ToString() + Eof);
 
                     handler.Send(msg);
                     handler.Shutdown(SocketShutdown.Both);

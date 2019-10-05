@@ -10,12 +10,20 @@ namespace Blackjack
     {
         public string Name { get; set; }
         public int Cash { get; set; }
+        public int Bet { get; set; }
         public Hand Hand { get; set; }
 
         public Player(string name, int startingCash = 10000)
         {
             this.Name = name;
             this.Cash = startingCash;
+        }
+
+        public void setBet(int bet)
+        {
+            if (bet > Cash)
+            {
+            }
         }
     }
 }

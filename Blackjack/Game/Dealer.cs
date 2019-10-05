@@ -14,12 +14,15 @@ namespace Blackjack
         public Dealer()
         {
             this.Deck = new Deck();
-            this.Hand = new Hand(this.Deck);
         }
 
         public Dealer(Deck deck)
         {
             this.Deck = deck;
+        }
+
+        public void DealToSelf()
+        {
             this.Hand = new Hand(this.Deck);
         }
 

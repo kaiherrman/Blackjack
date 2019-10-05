@@ -17,6 +17,10 @@ namespace Blackjack
                 Cards.Add(deck.Draw());
             }
         }
-
+        
+        public int GetValue()
+        {
+            return 0;
+        }
     }
 }
