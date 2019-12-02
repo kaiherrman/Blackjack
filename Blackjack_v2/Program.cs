@@ -33,10 +33,6 @@ namespace Blackjack_v2
                     if(game.DealerHandValue < 17 && (game.Players[0].Hand.GetValue() < 21 || game.Players[1].Hand.GetValue() < 21))
                     {
                         game.CurrentRound.Dealer.DrawCard();
-                        if(game.DealerHandValue > 21)
-                        {
-
-                        }
                     }
                     Console.Clear();
                     CalculateWinnings(game);
