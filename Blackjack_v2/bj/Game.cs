@@ -13,6 +13,7 @@ namespace Blackjack_v2.bj
         public int MinBet = 5;
         public int MaxBet = 500;
         public Round CurrentRound { get; set; }
+        public int DealerHandValue => CurrentRound.Dealer.Hand.GetValue();
 
         public void AddPlayer(Player player)
         {
@@ -24,6 +25,7 @@ namespace Blackjack_v2.bj
             foreach(Player player in Players)
             {
                 player.Bet = 0;
+                player.LastMove = 'x';
             }
             CurrentRound = new Round(this);
             IsRunning = true;
@@ -51,6 +53,8 @@ namespace Blackjack_v2.bj
                     Console.WriteLine("   " + CurrentRound.Dealer.Hand.Cards.First().Display());
                     Program.WriteInvisibleMessage("   " + CurrentRound.Dealer.Hand.Cards[1].Display());
                 }
+                if (CurrentRound.Dealer.Hand.IsBlackjack) Console.Write("\t BLACKJACK");
+                if (CurrentRound.Dealer.Hand.IsBust) Console.Write("\t BUSTED");
                 Console.Write(Environment.NewLine);
             }
             Player last = Players.Last();
@@ -66,8 +70,8 @@ namespace Blackjack_v2.bj
                 if (player.Hand != null)
                 {
                     Console.Write("Value: {0}", player.Hand.GetValue());
-                    if (player.Hand.GetValue() == 21) Console.Write("\t BLACKJACK");
-                    if (player.Hand.GetValue() > 21) Console.Write("\t BUSTED");
+                    if (player.Hand.IsBlackjack) Console.Write("\t BLACKJACK");
+                    if (player.Hand.IsBust) Console.Write("\t BUSTED");
                     Console.Write(Environment.NewLine);
                     foreach (Card card in player.Hand.Cards)
                     {
@@ -117,13 +121,13 @@ namespace Blackjack_v2.bj
                             Console.WriteLine("Hit");
                             player.DrawCard(CurrentRound.Dealer.Deck);
                             Console.WriteLine(player.Hand.GetValue());
-                            if (player.Hand.GetValue() == 21)
+                            if (player.Hand.IsBlackjack)
                             {
                                 Console.WriteLine("BLACKJACK!");
                                 player.Cash += player.Bet * 2;
                                 player.Bet = 0;
                             }
-                            else if (player.Hand.GetValue() > 21)
+                            else if (player.Hand.IsBust)
                             {
                                 Console.WriteLine("You are busted");
                                 player.Bet = 0;

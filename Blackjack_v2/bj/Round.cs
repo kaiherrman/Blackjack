@@ -29,7 +29,7 @@ namespace Blackjack_v2.bj
 
             Console.WriteLine("{0}", Dealer.Hand.Cards.First().Display());
 
-            if (Dealer.Hand.IsBlackjack())
+            if (Dealer.Hand.IsBlackjack)
             {
                 Console.WriteLine("Dealer has BlackJack");
                 foreach(Player player in Game.Players)

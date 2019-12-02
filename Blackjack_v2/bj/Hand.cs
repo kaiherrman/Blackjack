@@ -9,6 +9,8 @@ namespace Blackjack_v2.bj
     class Hand
     {
         public List<Card> Cards = new List<Card>();
+        public bool IsBlackjack => GetValue() == 21;
+        public bool IsBust => GetValue() > 21;
 
         public Hand(Deck deck)
         {
@@ -27,11 +29,6 @@ namespace Blackjack_v2.bj
             }
 
             return value;
-        }
-
-        public bool IsBlackjack()
-        {
-            return GetValue() == 21;
         }
     }
 }
