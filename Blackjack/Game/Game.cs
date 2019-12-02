@@ -1,9 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Blackjack.Game
 {
@@ -16,13 +12,12 @@ namespace Blackjack.Game
 
         public Game()
         {
-            this.Dealer = new Dealer();
         }
 
         public void StartGame()
         {
-            this.CurrentRound = new Round(this.Dealer, this.Players);
-
+            this.Dealer = new Dealer();
+            this.CurrentRound = new Round(this.Dealer, this.Players, this);
         }
 
         public void AddPlayer(Player player)

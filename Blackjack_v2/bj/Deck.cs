@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Blackjack
+namespace Blackjack_v2.bj
 {
     class Deck
     {
