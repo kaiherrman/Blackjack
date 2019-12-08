@@ -13,9 +13,12 @@ namespace TestClient
         public static int Main(String[] args)
         {
             Console.WriteLine("Please enter the IP Address of the server");
-            Client client = new Client(Console.ReadLine());
-            string message = "{\"route\": \"newPlayer\", \"data\": {\"name\": \"Hubertus\"}}";
+            Client client = new Client("10.10.136.228");
+            string message = "{\"route\":\"newPlayer\",\"data\":{\"name\":\"Kai\"}}";
             client.StartClient(message);
+
+            Console.ReadKey();
+
             return 0;
         }
 

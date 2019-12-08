@@ -1,0 +1,30 @@
+﻿{
+  "currentTurn": 0,
+  "dealer": {
+    "cards": [
+      "Ace of Spades"
+    ]
+  },
+  "players": [
+    {
+      "id": 0,
+      "name": "Kai",
+      "bet": 500,
+      "cash": 10000,
+      "cards": [
+        "2 of Hearts",
+        "3 of Spades"
+      ]
+    },
+    {
+      "id": 1,
+      "name": "David",
+      "bet": 500,
+      "cash": 10000,
+      "cards": [
+        "2 of Hearts",
+        "3 of Spades"
+      ]
+    }
+  ]
+}
