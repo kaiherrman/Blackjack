@@ -12,6 +12,7 @@ namespace Blackjack_v2.bj
         public bool IsRunning = false;
         public int MinBet = 5;
         public int MaxBet = 500;
+        public bool HaveAllPlayersBet => AllPlayersBet();
         public Round CurrentRound { get; set; }
         public int DealerHandValue => CurrentRound.Dealer.Hand.GetValue();
 
@@ -25,7 +26,7 @@ namespace Blackjack_v2.bj
             foreach(Player player in Players)
             {
                 player.Bet = 0;
-                player.LastMove = 'x';
+                player.LastMove = "";
             }
             CurrentRound = new Round(this);
             IsRunning = true;
@@ -141,6 +142,17 @@ namespace Blackjack_v2.bj
                     }
                 }
             }
+        }
+
+        private bool AllPlayersBet()
+        {
+            bool response = true;
+            foreach(Player player in Players)
+            {
+                if (player.Bet == 0) response = false;
+            }
+
+            return response;
         }
     }
 }

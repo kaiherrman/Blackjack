@@ -18,17 +18,12 @@ namespace Blackjack_v2.bj
         {
             Game = game;
             this.Game.PrintGameInformation();
-            Game.GetInitialBets();
         }
 
         public void Start()
         {
             IsRunning = true;
             Dealer.DealToSelf();
-            Program.WriteInvisibleMessage("Dealer Value: " + Dealer.Hand.GetValue());
-
-            Console.WriteLine("{0}", Dealer.Hand.Cards.First().Display());
-
             if (Dealer.Hand.IsBlackjack)
             {
                 Console.WriteLine("Dealer has BlackJack");
@@ -38,7 +33,6 @@ namespace Blackjack_v2.bj
                 }
                 Game.NewRound();
             }
-
             foreach(Player player in Game.Players)
             {
                 Dealer.DealToPlayer(player);

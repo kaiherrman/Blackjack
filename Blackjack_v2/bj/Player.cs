@@ -12,7 +12,7 @@ namespace Blackjack_v2.bj
         public int Cash { get; set; }
         public Hand Hand { get; set; }
         public int Bet { get; set; }
-        public char LastMove { get; set; }
+        public string LastMove { get; set; }
         public int HandValue => Hand.GetValue();
 
         public Player(string name)

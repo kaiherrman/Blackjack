@@ -41,7 +41,6 @@ namespace TestClient
                         sender.Connect(remoteEP);
 
                         Console.WriteLine("[CONNECTION] {0}", sender.RemoteEndPoint.ToString());
-
                         // Encode the data string into a byte array.  
                         byte[] msg = Encoding.ASCII.GetBytes(message + Eof);
 

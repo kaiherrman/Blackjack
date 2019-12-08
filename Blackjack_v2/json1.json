@@ -1,0 +1,21 @@
+{
+  "newPlayerRequest": {
+    "route": "newPlayer",
+    "data": {
+      "name": "Kai"
+    }
+  },
+
+  "getStatus": {
+    "route": "status"
+  },
+
+
+  "placeBetRequest": {
+    "route": "placeBet",
+    "data": {
+      "clientId": 0,
+      "bet": 500
+    }
+  }
+}
