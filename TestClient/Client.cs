@@ -10,7 +10,7 @@ namespace TestClient
 {
     class Client
     {
-        public string Eof = "!<tlbzXnAz5mYvMJoC5uUJ*tlbzXnAz5mYvMJoC5uUJ>!";
+        public string Eof = "<EOF>";
         public IPAddress IPAddress { get; set; }
 
         public Client(String ip)

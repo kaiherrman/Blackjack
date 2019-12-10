@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Blackjack_v2.bj;
-using Blackjack_v2.SocketComm;
+using Blackjack_Server.bj;
+using Blackjack_Server.SocketComm;
 
-namespace Blackjack_v2
+namespace Blackjack_Server
 {
     class Program
     {
@@ -14,10 +10,9 @@ namespace Blackjack_v2
         {
             Game game = new Game();
 
-            string ipAddress = "10.10.136.228"; //Get from user-input or config
-            Server server = new Server(ipString: ipAddress, game: game);
-
-            server.StartListener();
+            string ipAddress = "192.168.1.132"; //Get from user-input or config
+            AsyncServer server = new AsyncServer(ipAddress, game);
+            server.StartListening();
         }
         //static void Main(string[] args)
         //{
@@ -78,32 +73,5 @@ namespace Blackjack_v2
 
 
         //}
-
-        public static void WriteInvisibleMessage(string msg)
-        {
-            Console.ForegroundColor = ConsoleColor.DarkYellow;
-            Console.WriteLine(msg);
-            Console.ForegroundColor = ConsoleColor.White;
-        }
-
-        public static void CalculateWinnings(Game game)
-        {
-            foreach (Player player in game.Players)
-            {
-                if (player.Bet > 0)
-                {
-                    if(player.HandValue > game.DealerHandValue || game.CurrentRound.Dealer.Hand.IsBust)
-                    {
-                        player.Cash += player.Bet * 2;
-                        
-                    }
-                    else if(player.HandValue == game.DealerHandValue)
-                    {
-                        player.Cash += player.Bet;
-                    }
-                    player.Bet = 0;
-                }
-            }
-        }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Blackjack_v2.bj;
+﻿using Blackjack_Server.bj;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -6,13 +6,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Blackjack_v2.SocketComm
+namespace Blackjack_Server.SocketComm
 {
     class Router
     {
-        Server Server { get; set; }
+        AsyncServer Server { get; set; }
 
-        public Router(Server server)
+        public Router(AsyncServer server)
         {
             Server = server;
         }
@@ -90,6 +90,10 @@ namespace Blackjack_v2.SocketComm
             switch (actionType)
             {
                 case "bet":
+                    if (Server.Game.HaveAllPlayersBet)
+                    {
+                        return new JObject(new JProperty("error", "bets_are_closed"));
+                    }
                     int bet = (int)data.SelectToken("action").SelectToken("value");
                     return PlaceBet(clientId, bet);
                 case "hit":

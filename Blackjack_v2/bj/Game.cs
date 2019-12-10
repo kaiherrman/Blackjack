@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Blackjack_v2.bj
+namespace Blackjack_Server.bj
 {
     class Game
     {
@@ -31,73 +31,6 @@ namespace Blackjack_v2.bj
             CurrentRound = new Round(this);
             IsRunning = true;
             return this.CurrentRound;
-        }
-
-        public void PrintGameInformation(bool revealDealerCards = false)
-        {
-            Console.WriteLine("---------- PLAYERS ----------");
-
-            if(CurrentRound != null)
-            {
-                Console.WriteLine("{0} \t", "Dealer");
-                if (revealDealerCards)
-                {
-                    Console.WriteLine("Dealer Value: {0}", CurrentRound.Dealer.Hand.GetValue());
-                    foreach (Card card in CurrentRound.Dealer.Hand.Cards)
-                    {
-                        Console.WriteLine("   {0}", card.Display());
-                    }
-                }
-                else
-                {
-                    Program.WriteInvisibleMessage("Dealer Value: " + CurrentRound.Dealer.Hand.GetValue());
-                    Console.WriteLine("   " + CurrentRound.Dealer.Hand.Cards.First().Display());
-                    Program.WriteInvisibleMessage("   " + CurrentRound.Dealer.Hand.Cards[1].Display());
-                }
-                if (CurrentRound.Dealer.Hand.IsBlackjack) Console.Write("\t BLACKJACK");
-                if (CurrentRound.Dealer.Hand.IsBust) Console.Write("\t BUSTED");
-                Console.Write(Environment.NewLine);
-            }
-            Player last = Players.Last();
-            foreach (Player player in Players)
-            {
-                Console.Write("{0} \t", player.Name);
-                Console.Write("Cash: {0}\t", player.Cash);
-                if (player.Bet != 0)
-                {
-                    Console.Write("Bet: {0}", player.Bet);
-                }
-                Console.Write(Environment.NewLine);
-                if (player.Hand != null)
-                {
-                    Console.Write("Value: {0}", player.Hand.GetValue());
-                    if (player.Hand.IsBlackjack) Console.Write("\t BLACKJACK");
-                    if (player.Hand.IsBust) Console.Write("\t BUSTED");
-                    Console.Write(Environment.NewLine);
-                    foreach (Card card in player.Hand.Cards)
-                    {
-                        Console.WriteLine("   {0}", card.Display());
-                    }
-                }
-                if (player != last)
-                {
-                    Console.Write(Environment.NewLine);
-                }
-            }
-            Console.WriteLine("-----------------------------");
-        }
-
-        public void GetInitialBets()
-        {
-            foreach (Player player in Players) //Loop for placing bets!
-            {
-                while (player.Bet == 0)
-                {
-                    Console.Write("{0}, place your bet: ", player.Name);
-                    int bet = Convert.ToInt32(Console.ReadLine());
-                    player.PlaceBet(bet, this);
-                }
-            }
         }
 
         public void GetPlayerInput()

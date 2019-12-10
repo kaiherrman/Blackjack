@@ -6,8 +6,10 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using System.Threading;
+using Newtonsoft.Json.Linq;
+using Blackjack_Server.bj;
 
-namespace Blackjack_v2.SocketComm
+namespace Blackjack_Server.SocketComm
 {
     // State object for reading client data asynchronously  
     public class StateObject
@@ -24,17 +26,37 @@ namespace Blackjack_v2.SocketComm
 
     class AsyncServer
     {
+        public AsyncServer(string ipString, Game game, int port = 23312)
+        {
+            Game = game;
+            Router = new Router(this);
+            this.Port = port;
+            try
+            {
+                IpAddress = IPAddress.Parse(ipString);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+        }
+
         // Thread signal.  
         public static ManualResetEvent allDone = new ManualResetEvent(false);
 
-        public static void StartListening()
+        public IPAddress IpAddress { get; set; }
+        public int Port { get; set; }
+        public Router Router { get; set; }
+        public Game Game { get; set; }
+
+        public void StartListening()
         {
             // Establish the local endpoint for the socket.  
             // The DNS name of the computer  
             // running the listener is "host.contoso.com".  
             IPHostEntry ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
-            IPAddress ipAddress = ipHostInfo.AddressList[0];
-            IPEndPoint localEndPoint = new IPEndPoint(ipAddress, 11000);
+            IPAddress ipAddress = ipHostInfo.AddressList[1];
+            IPEndPoint localEndPoint = new IPEndPoint(IpAddress, Port);
 
             // Create a TCP/IP socket.  
             Socket listener = new Socket(ipAddress.AddressFamily,
@@ -72,7 +94,7 @@ namespace Blackjack_v2.SocketComm
 
         }
 
-        public static void AcceptCallback(IAsyncResult ar)
+        public void AcceptCallback(IAsyncResult ar)
         {
             // Signal the main thread to continue.  
             allDone.Set();
@@ -88,7 +110,7 @@ namespace Blackjack_v2.SocketComm
                 new AsyncCallback(ReadCallback), state);
         }
 
-        public static void ReadCallback(IAsyncResult ar)
+        public void ReadCallback(IAsyncResult ar)
         {
             String content = String.Empty;
 
@@ -116,7 +138,10 @@ namespace Blackjack_v2.SocketComm
                     Console.WriteLine("Read {0} bytes from socket. \n Data : {1}",
                         content.Length, content);
                     // Echo the data back to the client.  
-                    Send(handler, content);
+                    content = content.Replace("<EOF>", "");
+                    JObject jObject = JObject.Parse(content);
+                    JObject response = Router.Route(jObject);
+                    Send(handler, response.ToString() + "<EOF>");
                 }
                 else
                 {
@@ -127,7 +152,7 @@ namespace Blackjack_v2.SocketComm
             }
         }
 
-        private static void Send(Socket handler, String data)
+        private void Send(Socket handler, String data)
         {
             // Convert the string data to byte data using ASCII encoding.  
             byte[] byteData = Encoding.ASCII.GetBytes(data);
@@ -137,7 +162,7 @@ namespace Blackjack_v2.SocketComm
                 new AsyncCallback(SendCallback), handler);
         }
 
-        private static void SendCallback(IAsyncResult ar)
+        private void SendCallback(IAsyncResult ar)
         {
             try
             {
