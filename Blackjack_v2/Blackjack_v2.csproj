@@ -55,6 +55,7 @@
     <Compile Include="bj\Round.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SocketComm\AsyncServer.cs" />
     <Compile Include="SocketComm\Router.cs" />
     <Compile Include="SocketComm\Server.cs" />
   </ItemGroup>

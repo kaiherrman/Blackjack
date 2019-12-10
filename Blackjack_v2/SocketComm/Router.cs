@@ -35,14 +35,27 @@ namespace Blackjack_v2.SocketComm
 
         private JObject NewPlayer(string name)
         {
-            Server.Game.AddPlayer(new Player(name));
+            Player player = new Player(name);
 
-            if(Server.Game.Players.Count == 2)
+            if (Server.Game.Players.Count < 2)
+            {
+                Server.Game.AddPlayer(player);
+            }
+            else
+            {
+                return GetStatus();
+            }
+
+            if (Server.Game.Players.Count == 2)
             {
                 Server.Game.NewRound();
             }
 
-            return GetStatus();
+            JObject response = new JObject(
+                new JProperty("clientId", Server.Game.Players.IndexOf(player))
+            );
+
+            return response;
         }
 
         private JObject PlaceBet(int clientId, int bet)
@@ -67,6 +80,10 @@ namespace Blackjack_v2.SocketComm
             int clientId = (int)data.SelectToken("clientId");
             string actionType = (string)data.SelectToken("action").SelectToken("type");
 
+            if (Server.Game.CurrentRound.CurrentTurn != clientId && actionType != "bet")
+            {
+                return new JObject(new JProperty("error", "not_your_turn"));
+            }
 
             Server.Game.Players[clientId].LastMove = actionType;
 
@@ -76,8 +93,36 @@ namespace Blackjack_v2.SocketComm
                     int bet = (int)data.SelectToken("action").SelectToken("value");
                     return PlaceBet(clientId, bet);
                 case "hit":
+                    Server.Game.Players[clientId].DrawCard(Server.Game.CurrentRound.Dealer.Deck);
                     return GetStatus();
                 case "stand":
+                    if(clientId == 0)
+                    {
+                        Server.Game.CurrentRound.CurrentTurn = 1;
+                    }
+                    else
+                    {
+                        Server.Game.CurrentRound.CurrentTurn = 0;
+                        Server.Game.CalculateWinnings();
+                    }
+                    return GetStatus();
+                case "newRound":
+                    Server.Game.Players[clientId].LastMove = "";
+
+                    bool allPlayersReady = true;
+                    foreach(Player player in Server.Game.Players)
+                    {
+                        if (player.LastMove != "")
+                        {
+                            allPlayersReady = false;
+                        }
+                    }
+
+                    if (allPlayersReady)
+                    {
+                        Server.Game.NewRound();
+                    }
+
                     return GetStatus();
             }
 
@@ -138,6 +183,8 @@ namespace Blackjack_v2.SocketComm
                         new JProperty("number", card.Number.ToString())
                     ));
                 }
+
+                dealer.Add("cards", cards);
 
                 status.Add("dealer", dealer);
             }

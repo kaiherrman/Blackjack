@@ -14,7 +14,7 @@ namespace Blackjack_v2
         {
             Game game = new Game();
 
-            string ipAddress = "192.168.1.132"; //Get from user-input or config
+            string ipAddress = "10.10.136.228"; //Get from user-input or config
             Server server = new Server(ipString: ipAddress, game: game);
 
             server.StartListener();

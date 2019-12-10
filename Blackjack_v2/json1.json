@@ -12,10 +12,46 @@
 
 
   "placeBetRequest": {
-    "route": "placeBet",
+    "route": "playerAction",
     "data": {
-      "clientId": 0,
-      "bet": 500
+      "action": {
+        "type": "bet",
+        "value": 500
+      },
+      "clientId": 0
+    }
+  },
+
+
+  "hitRequest": {
+    "route": "playerAction",
+    "data": {
+      "action": {
+        "type": "hit"
+      },
+      "clientId": 0
+    }
+  },
+
+
+  "standRequest": {
+    "route": "playerAction",
+    "data": {
+      "action": {
+        "type": "stand"
+      },
+      "clientId": 0
+    }
+  },
+
+
+  "newRoundRequest": {
+    "route": "playerAction",
+    "data": {
+      "action": {
+        "type": "newRound"
+      },
+      "clientId": 0
     }
   }
 }

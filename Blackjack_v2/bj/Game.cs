@@ -102,46 +102,46 @@ namespace Blackjack_v2.bj
 
         public void GetPlayerInput()
         {
-            foreach (Player player in Players)
-            {
-                while (player.LastMove != 'S' && player.Bet > 0)
-                {
-                    Console.Clear();
-                    PrintGameInformation();
-                    Console.Write(Environment.NewLine);
-                    Console.WriteLine("{0}, it's your turn.", player.Name);
-                    Console.Write("Controls: ");
-                    Console.Write("[H]-Hit | [S]-Stay");
+        //    foreach (Player player in Players)
+        //    {
+        //        while (player.LastMove != 'S' && player.Bet > 0)
+        //        {
+        //            Console.Clear();
+        //            PrintGameInformation();
+        //            Console.Write(Environment.NewLine);
+        //            Console.WriteLine("{0}, it's your turn.", player.Name);
+        //            Console.Write("Controls: ");
+        //            Console.Write("[H]-Hit | [S]-Stay");
 
-                    char key = Console.ReadKey().KeyChar;
+        //            char key = Console.ReadKey().KeyChar;
 
-                    player.LastMove = Char.ToUpper(key);
-                    switch (Char.ToUpper(key))
-                    {
-                        case 'H':
-                            Console.WriteLine("Hit");
-                            player.DrawCard(CurrentRound.Dealer.Deck);
-                            Console.WriteLine(player.Hand.GetValue());
-                            if (player.Hand.IsBlackjack)
-                            {
-                                Console.WriteLine("BLACKJACK!");
-                                player.Cash += player.Bet * 2;
-                                player.Bet = 0;
-                            }
-                            else if (player.Hand.IsBust)
-                            {
-                                Console.WriteLine("You are busted");
-                                player.Bet = 0;
-                            }
-                            break;
-                        case 'S':
-                            Console.WriteLine("Stay");
-                            break;
-                        default:
-                            break;
-                    }
-                }
-            }
+        //            player.LastMove = Char.ToUpper(key);
+        //            switch (Char.ToUpper(key))
+        //            {
+        //                case 'H':
+        //                    Console.WriteLine("Hit");
+        //                    player.DrawCard(CurrentRound.Dealer.Deck);
+        //                    Console.WriteLine(player.Hand.GetValue());
+        //                    if (player.Hand.IsBlackjack)
+        //                    {
+        //                        Console.WriteLine("BLACKJACK!");
+        //                        player.Cash += player.Bet * 2;
+        //                        player.Bet = 0;
+        //                    }
+        //                    else if (player.Hand.IsBust)
+        //                    {
+        //                        Console.WriteLine("You are busted");
+        //                        player.Bet = 0;
+        //                    }
+        //                    break;
+        //                case 'S':
+        //                    Console.WriteLine("Stay");
+        //                    break;
+        //                default:
+        //                    break;
+        //            }
+        //        }
+        //    }
         }
 
         private bool AllPlayersBet()
@@ -153,6 +153,26 @@ namespace Blackjack_v2.bj
             }
 
             return response;
+        }
+
+        public void CalculateWinnings()
+        {
+            foreach (Player player in Players)
+            {
+                if (player.Bet > 0)
+                {
+                    if (player.HandValue > DealerHandValue || CurrentRound.Dealer.Hand.IsBust)
+                    {
+                        player.Cash += player.Bet * 2;
+
+                    }
+                    else if (player.HandValue == DealerHandValue)
+                    {
+                        player.Cash += player.Bet;
+                    }
+                    player.Bet = 0;
+                }
+            }
         }
     }
 }

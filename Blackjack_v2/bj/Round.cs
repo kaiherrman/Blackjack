@@ -11,8 +11,8 @@ namespace Blackjack_v2.bj
         private Game Game { get; set; }
         public static Deck Deck = new Deck();
         public Dealer Dealer = new Dealer(Deck);
+        public int CurrentTurn = 0;
         public bool IsRunning = false;
-        public Player Winner { get; set; }
 
         public Round(Game game)
         {
@@ -31,12 +31,21 @@ namespace Blackjack_v2.bj
                 {
                     player.Bet = 0;
                 }
-                Game.NewRound();
             }
             foreach(Player player in Game.Players)
             {
                 Dealer.DealToPlayer(player);
+                if (player.Hand.IsBlackjack)
+                {
+                    player.Cash += player.Bet * 3;
+                    player.Bet = 0;
+                    if(CurrentTurn == 0 && Game.Players.IndexOf(player) == 0)
+                    {
+                        CurrentTurn = 1;
+                    }
+                }
             }
+
         }
 
         public void Stop()
