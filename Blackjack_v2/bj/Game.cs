@@ -90,6 +90,10 @@ namespace Blackjack_Server.bj
 
         public void CalculateWinnings()
         {
+            if (DealerHandValue < 17 && (Players[0].Hand.GetValue() < 21 || Players[1].Hand.GetValue() < 21))
+            {
+                CurrentRound.Dealer.DrawCard();
+            }
             foreach (Player player in Players)
             {
                 if (player.Bet > 0)

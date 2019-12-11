@@ -24,6 +24,8 @@ namespace Blackjack_Server.SocketComm
             {
                 case "status":
                     return GetStatus();
+                case "resetGame":
+                    return ResetGame();
                 case "newPlayer":
                     return NewPlayer((string)request.SelectToken("data").SelectToken("name"));
                 case "playerAction":
@@ -98,6 +100,15 @@ namespace Blackjack_Server.SocketComm
                     return PlaceBet(clientId, bet);
                 case "hit":
                     Server.Game.Players[clientId].DrawCard(Server.Game.CurrentRound.Dealer.Deck);
+                    if (Server.Game.Players[clientId].Hand.IsBlackjack)
+                    {
+                        Server.Game.Players[clientId].Cash += Server.Game.Players[clientId].Bet * 3;
+                        Server.Game.Players[clientId].Bet = 0;
+                    }
+                    else if(Server.Game.Players[clientId].Hand.IsBust)
+                    {
+                        Server.Game.Players[clientId].Bet = 0;
+                    }
                     return GetStatus();
                 case "stand":
                     if(clientId == 0)
@@ -194,6 +205,12 @@ namespace Blackjack_Server.SocketComm
             }
 
             return status;
+        }
+
+        private JObject ResetGame()
+        {
+            Server.Game = new Game();
+            return new JObject(new JProperty("success", "new_game_started"));
         }
     }
 }

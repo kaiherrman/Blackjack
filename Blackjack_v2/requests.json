@@ -1,16 +1,31 @@
 {
+  "getStatus": {
+    "route": "status"
+  },
+  "hitRequest": {
+    "route": "playerAction",
+    "data": {
+      "action": {
+        "type": "hit"
+      },
+      "clientId": 0
+    }
+  },
   "newPlayerRequest": {
     "route": "newPlayer",
     "data": {
       "name": "Kai"
     }
   },
-
-  "getStatus": {
-    "route": "status"
+  "newRoundRequest": {
+    "route": "playerAction",
+    "data": {
+      "action": {
+        "type": "newRound"
+      },
+      "clientId": 0
+    }
   },
-
-
   "placeBetRequest": {
     "route": "playerAction",
     "data": {
@@ -21,35 +36,14 @@
       "clientId": 0
     }
   },
-
-
-  "hitRequest": {
-    "route": "playerAction",
-    "data": {
-      "action": {
-        "type": "hit"
-      },
-      "clientId": 0
-    }
+  "resetGame": {
+    "route": "resetGame"
   },
-
-
   "standRequest": {
     "route": "playerAction",
     "data": {
       "action": {
         "type": "stand"
-      },
-      "clientId": 0
-    }
-  },
-
-
-  "newRoundRequest": {
-    "route": "playerAction",
-    "data": {
-      "action": {
-        "type": "newRound"
       },
       "clientId": 0
     }

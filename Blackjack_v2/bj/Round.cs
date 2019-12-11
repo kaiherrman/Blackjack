@@ -17,7 +17,6 @@ namespace Blackjack_Server.bj
         public Round(Game game)
         {
             Game = game;
-            this.Game.PrintGameInformation();
         }
 
         public void Start()
