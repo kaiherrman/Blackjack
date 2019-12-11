@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace Blackjack_Server.bj
 {
     class Hand
     {
-        public List<Card> Cards = new List<Card>();
+        public readonly List<Card> Cards = new List<Card>();
         public bool IsBlackjack => GetValue() == 21;
         public bool IsBust => GetValue() > 21;
 

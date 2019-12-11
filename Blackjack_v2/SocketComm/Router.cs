@@ -1,16 +1,11 @@
 ﻿using Blackjack_Server.bj;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Blackjack_Server.SocketComm
 {
     class Router
     {
-        AsyncServer Server { get; set; }
+        private AsyncServer Server { get; }
 
         public Router(AsyncServer server)
         {
@@ -67,7 +62,7 @@ namespace Blackjack_Server.SocketComm
                 return new JObject(new JProperty("error", "not_enough_players"));
             }
 
-            Server.Game.Players[clientId].PlaceBet(bet, Server.Game);
+            Server.Game.Players[clientId].PlaceBet(bet);
 
             if (Server.Game.HaveAllPlayersBet)
             {
@@ -85,6 +80,10 @@ namespace Blackjack_Server.SocketComm
             if (Server.Game.CurrentRound.CurrentTurn != clientId && actionType != "bet")
             {
                 return new JObject(new JProperty("error", "not_your_turn"));
+            }
+            if(!Server.Game.CurrentRound.IsRunning && actionType != "bet")
+            {
+                return new JObject(new JProperty("error", "round_not_started"));
             }
 
             Server.Game.Players[clientId].LastMove = actionType;

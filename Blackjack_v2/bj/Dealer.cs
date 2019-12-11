@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Blackjack_Server.bj
+﻿namespace Blackjack_Server.bj
 {
     class Dealer
     {
-        public Deck Deck { get; set; }
-        public Hand Hand { get; set; }
+        public Deck Deck { get; }
+        public Hand Hand { get; private set; }
 
         public Dealer(Deck deck)
         {

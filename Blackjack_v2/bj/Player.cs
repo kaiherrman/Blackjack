@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Blackjack_Server.bj
+﻿namespace Blackjack_Server.bj
 {
     class Player
     {
-        public string Name { get; set; }
+        public string Name { get; }
         public int Cash { get; set; }
         public Hand Hand { get; set; }
         public int Bet { get; set; }
@@ -21,22 +15,16 @@ namespace Blackjack_Server.bj
             Cash = 10000;
         }
 
-        public Player(string name, int cash)
-        {
-            Name = name;
-            Cash = cash;
-        }
-
         public void DrawCard(Deck deck)
         {
             Hand.Cards.Add(deck.Draw());
         }
 
-        public void PlaceBet(int amount, Game game)
+        public void PlaceBet(int amount)
         {
-            if (amount < game.MinBet) Console.WriteLine("Bet is too low");
-            else if (amount > game.MaxBet) Console.WriteLine("Bet is too high");
-            else if (amount > Cash) Console.WriteLine("Not enough cash");
+            if (amount < Game.MinBet) return;
+            else if (amount > Game.MaxBet) return;
+            else if (amount > Cash) return;
             else
             {
                 Cash -= amount; //Subtract bet from cash

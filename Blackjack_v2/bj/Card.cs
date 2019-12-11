@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Blackjack_Server.bj
 {
     class Card
     {
-        public Number Number { get; set; }
-        public Suit Suit { get; set; }
-        public int Value { get; set; }
+        public Number Number { get; }
+        public Suit Suit { get; }
+        public int Value { get; }
 
         public Card(Number number, Suit suit)
         {
@@ -19,7 +15,7 @@ namespace Blackjack_Server.bj
             this.Value = GetValue(number);
         }
 
-        public static int GetValue(Number number)
+        private static int GetValue(Number number)
         {
             switch (number)
             {
@@ -49,11 +45,6 @@ namespace Blackjack_Server.bj
                 default:
                     throw new ArgumentOutOfRangeException(nameof(number), number, null);
             }
-        }
-
-        public string Display()
-        {
-            return this.Number.ToString() + " of " + this.Suit.ToString();
         }
     }
 

@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Net;
 using System.Net.Sockets;
-using System.Threading.Tasks;
 using System.Threading;
 using Newtonsoft.Json.Linq;
 using Blackjack_Server.bj;
@@ -15,13 +12,13 @@ namespace Blackjack_Server.SocketComm
     public class StateObject
     {
         // Client  socket.  
-        public Socket workSocket = null;
+        public Socket WorkSocket;
         // Size of receive buffer.  
         public const int BufferSize = 1024;
         // Receive buffer.  
-        public byte[] buffer = new byte[BufferSize];
+        public readonly byte[] Buffer = new byte[BufferSize];
         // Received data string.  
-        public StringBuilder sb = new StringBuilder();
+        public readonly StringBuilder Sb = new StringBuilder();
     }
 
     class AsyncServer
@@ -42,11 +39,11 @@ namespace Blackjack_Server.SocketComm
         }
 
         // Thread signal.  
-        public static ManualResetEvent allDone = new ManualResetEvent(false);
+        private static readonly ManualResetEvent AllDone = new ManualResetEvent(false);
 
-        public IPAddress IpAddress { get; set; }
-        public int Port { get; set; }
-        public Router Router { get; set; }
+        private IPAddress IpAddress { get; }
+        private int Port { get; }
+        private Router Router { get; }
         public Game Game { get; set; }
 
         public void StartListening()
@@ -66,17 +63,17 @@ namespace Blackjack_Server.SocketComm
 
                 while (true)
                 {
-                    // Set the event to nonsignaled state.  
-                    allDone.Reset();
+                    // Set the event to non signaled state.  
+                    AllDone.Reset();
 
                     // Start an asynchronous socket to listen for connections.  
                     Console.WriteLine("Waiting for a connection...");
                     listener.BeginAccept(
-                        new AsyncCallback(AcceptCallback),
+                        AcceptCallback,
                         listener);
 
                     // Wait until a connection is made before continuing.  
-                    allDone.WaitOne();
+                    AllDone.WaitOne();
                 }
 
             }
@@ -90,30 +87,27 @@ namespace Blackjack_Server.SocketComm
 
         }
 
-        public void AcceptCallback(IAsyncResult ar)
+        private void AcceptCallback(IAsyncResult ar)
         {
             // Signal the main thread to continue.  
-            allDone.Set();
+            AllDone.Set();
 
             // Get the socket that handles the client request.  
             Socket listener = (Socket)ar.AsyncState;
             Socket handler = listener.EndAccept(ar);
 
             // Create the state object.  
-            StateObject state = new StateObject();
-            state.workSocket = handler;
-            handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
-                new AsyncCallback(ReadCallback), state);
+            StateObject state = new StateObject {WorkSocket = handler};
+            handler.BeginReceive(state.Buffer, 0, StateObject.BufferSize, 0,
+                ReadCallback, state);
         }
 
-        public void ReadCallback(IAsyncResult ar)
+        private void ReadCallback(IAsyncResult ar)
         {
-            String content = String.Empty;
-
             // Retrieve the state object and the handler socket  
             // from the asynchronous state object.  
             StateObject state = (StateObject)ar.AsyncState;
-            Socket handler = state.workSocket;
+            Socket handler = state.WorkSocket;
 
             // Read data from the client socket.   
             int bytesRead = handler.EndReceive(ar);
@@ -121,12 +115,12 @@ namespace Blackjack_Server.SocketComm
             if (bytesRead > 0)
             {
                 // There  might be more data, so store the data received so far.  
-                state.sb.Append(Encoding.ASCII.GetString(
-                    state.buffer, 0, bytesRead));
+                state.Sb.Append(Encoding.ASCII.GetString(
+                    state.Buffer, 0, bytesRead));
 
                 // Check for end-of-file tag. If it is not there, read   
                 // more data.  
-                content = state.sb.ToString();
+                var content = state.Sb.ToString();
                 if (content.IndexOf("<EOF>") > -1)
                 {
                     // All the data has been read from the   
@@ -137,13 +131,13 @@ namespace Blackjack_Server.SocketComm
                     content = content.Replace("<EOF>", "");
                     JObject jObject = JObject.Parse(content);
                     JObject response = Router.Route(jObject);
-                    Send(handler, response.ToString() + "<EOF>");
+                    Send(handler, response + "<EOF>");
                 }
                 else
                 {
                     // Not all data received. Get more.  
-                    handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
-                    new AsyncCallback(ReadCallback), state);
+                    handler.BeginReceive(state.Buffer, 0, StateObject.BufferSize, 0,
+                    ReadCallback, state);
                 }
             }
         }
@@ -155,7 +149,7 @@ namespace Blackjack_Server.SocketComm
 
             // Begin sending the data to the remote device.  
             handler.BeginSend(byteData, 0, byteData.Length, 0,
-                new AsyncCallback(SendCallback), handler);
+                SendCallback, handler);
         }
 
         private void SendCallback(IAsyncResult ar)

@@ -1,12 +1,11 @@
-﻿using System;
-using Blackjack_Server.bj;
+﻿using Blackjack_Server.bj;
 using Blackjack_Server.SocketComm;
 
 namespace Blackjack_Server
 {
-    class Program
+    static class Program
     {
-        static void Main(string[] args)
+        private static void Main()
         {
             Game game = new Game();
 

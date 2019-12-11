@@ -10,12 +10,12 @@ namespace TestClient
 {
     class Client
     {
-        public string Eof = "<EOF>";
-        public IPAddress IPAddress { get; set; }
+        private const string Eof = "<EOF>";
+        private IPAddress IpAddress { get; set; }
 
         public Client(String ip)
         {
-            this.IPAddress = IPAddress.Parse(ip);
+            this.IpAddress = IPAddress.Parse(ip);
         }
 
         public void StartClient(string message)
@@ -28,7 +28,7 @@ namespace TestClient
             {
                 // Establish the remote endpoint for the socket.  
                 // This example uses port 11000 on the local computer.  
-                IPEndPoint remoteEP = new IPEndPoint(IPAddress, 23312);
+                IPEndPoint remoteEP = new IPEndPoint(IpAddress, 23312);
 
                 // Create a TCP/IP  socket.  
                 using (Socket sender = new Socket(AddressFamily.InterNetwork,

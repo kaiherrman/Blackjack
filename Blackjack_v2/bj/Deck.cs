@@ -1,35 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Blackjack_Server.bj
 {
     class Deck
     {
-        public List<Card> Cards = new List<Card>();
-        public Random random = new Random();
+        private readonly List<Card> _cards = new List<Card>();
+        private readonly Random _random = new Random();
 
         public Deck()
         {
             foreach (Suit suit in Enum.GetValues(typeof(Suit)))
             {
                 foreach (Number number in Enum.GetValues(typeof(Number))){
-                    Cards.Add(new Card(number, suit));
+                    _cards.Add(new Card(number, suit));
                 }
             }
         }
 
         public Card Draw()
         {
-            if(Cards.Count == 0)
+            if(_cards.Count == 0)
             {
                 throw new Exception("There are only 52 cards my dude.");
             }
-            int randomNumber = random.Next(0, Cards.Count);
-            Card card = Cards[randomNumber];
-            Cards.RemoveAt(randomNumber);
+            int randomNumber = _random.Next(0, _cards.Count);
+            Card card = _cards[randomNumber];
+            _cards.RemoveAt(randomNumber);
             return card;
         }
     }

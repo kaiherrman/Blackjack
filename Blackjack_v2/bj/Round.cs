@@ -1,18 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Blackjack_Server.bj
 {
     class Round
     {
-        private Game Game { get; set; }
-        public static Deck Deck = new Deck();
-        public Dealer Dealer = new Dealer(Deck);
-        public int CurrentTurn = 0;
-        public bool IsRunning = false;
+        private Game Game { get; }
+        private static readonly Deck Deck = new Deck();
+        public readonly Dealer Dealer = new Dealer(Deck);
+        public int CurrentTurn;
+        public bool IsRunning;
 
         public Round(Game game)
         {
@@ -45,11 +41,6 @@ namespace Blackjack_Server.bj
                 }
             }
 
-        }
-
-        public void Stop()
-        {
-            IsRunning = false;
         }
     }
 }
