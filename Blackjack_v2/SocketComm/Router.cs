@@ -116,7 +116,7 @@ namespace Blackjack_Server.SocketComm
                     }
                     else
                     {
-                        Server.Game.CurrentRound.CurrentTurn = 0;
+                        Server.Game.CurrentRound.CurrentTurn = -1;
                         Server.Game.CalculateWinnings();
                     }
                     return GetStatus();
