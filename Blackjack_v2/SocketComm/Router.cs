@@ -77,7 +77,11 @@ namespace Blackjack_Server.SocketComm
             int clientId = (int)data.SelectToken("clientId");
             string actionType = (string)data.SelectToken("action").SelectToken("type");
 
-            if (Server.Game.CurrentRound.CurrentTurn != clientId && actionType != "bet" && actionType != "newRound")
+            if (Server.Game.CurrentRound.CurrentTurn != clientId
+                && actionType != "bet"
+                && actionType != "newRound"
+                && actionType != "stand"
+                )
             {
                 return new JObject(new JProperty("error", "not_your_turn"));
             }
@@ -110,14 +114,30 @@ namespace Blackjack_Server.SocketComm
                     }
                     return GetStatus();
                 case "stand":
-                    if(clientId == 0)
+                    bool allPlayersStood = true;
+                    foreach (Player player in Server.Game.Players)
                     {
-                        Server.Game.CurrentRound.CurrentTurn = 1;
+                        if (player.LastMove != "stand")
+                        {
+                            allPlayersStood = false;
+                        }
                     }
-                    else
+
+                    if (allPlayersStood)
                     {
                         Server.Game.CurrentRound.CurrentTurn = -1;
                         Server.Game.CalculateWinnings();
+                    }
+                    else
+                    {
+                        if (clientId == 0)
+                        {
+                            Server.Game.CurrentRound.CurrentTurn = 1;
+                        }
+                        else
+                        {
+                            clientId = 0;
+                        }
                     }
                     return GetStatus();
                 case "newRound":
@@ -183,9 +203,13 @@ namespace Blackjack_Server.SocketComm
 
 
             JObject status = new JObject(
-                new JProperty("currentTurn", Server.Game.CurrentRound.CurrentTurn),
                 new JProperty("players", players)
             );
+
+            if (Server.Game.CurrentRound != null)
+            {
+                status.Add("currentTurn", Server.Game.CurrentRound.CurrentTurn);
+            }
 
             if(Server.Game.CurrentRound != null && Server.Game.CurrentRound.IsRunning)
             {
