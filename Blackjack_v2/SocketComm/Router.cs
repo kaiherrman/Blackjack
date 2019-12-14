@@ -183,7 +183,7 @@ namespace Blackjack_Server.SocketComm
 
 
             JObject status = new JObject(
-                new JProperty("currentTurn", 0),
+                new JProperty("currentTurn", Server.Game.CurrentRound.CurrentTurn),
                 new JProperty("players", players)
             );
 
