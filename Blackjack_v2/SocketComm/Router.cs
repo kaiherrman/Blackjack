@@ -77,7 +77,7 @@ namespace Blackjack_Server.SocketComm
             int clientId = (int)data.SelectToken("clientId");
             string actionType = (string)data.SelectToken("action").SelectToken("type");
 
-            if (Server.Game.CurrentRound.CurrentTurn != clientId && actionType != "bet")
+            if (Server.Game.CurrentRound.CurrentTurn != clientId && actionType != "bet" && actionType != "newRound")
             {
                 return new JObject(new JProperty("error", "not_your_turn"));
             }
@@ -122,6 +122,11 @@ namespace Blackjack_Server.SocketComm
                     return GetStatus();
                 case "newRound":
                     Server.Game.Players[clientId].LastMove = "";
+
+                    if (Server.Game.CurrentRound.CurrentTurn != -1)
+                    {
+                        return new JObject(new JProperty("error", "round_still_running"));
+                    }
 
                     bool allPlayersReady = true;
                     foreach(Player player in Server.Game.Players)
